@@ -188,10 +188,7 @@ func (r *Results) SetRelativeTo(dir string) {
 			continue
 		}
 		rng := m.Range()
-		relative, err := filepath.Rel(dir, rng.GetLocalFilename())
-		if err != nil || strings.Contains(relative, "..") {
-			continue
-		}
+		relative := filepath.Join(dir, rng.GetLocalFilename())
 		filesystem := rng.GetFS()
 		if filesystem == nil {
 			continue
