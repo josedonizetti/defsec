@@ -181,14 +181,18 @@ func (r *Results) SetRule(rule Rule) {
 	}
 }
 
-func (r *Results) SetRelativeTo(dir string) {
+func (r *Results) SetRelativeTo(root, dir, fullDir string) {
 	for i := range *r {
 		m := (*r)[i].Metadata()
 		if m.IsUnmanaged() || m.Range() == nil {
 			continue
 		}
 		rng := m.Range()
-		relative := filepath.Join(dir, rng.GetLocalFilename())
+		absolute := filepath.Join(root, dir, rng.GetLocalFilename())
+		relative, err := filepath.Rel(fullDir, absolute)
+		if err != nil {
+			continue
+		}
 		filesystem := rng.GetFS()
 		if filesystem == nil {
 			continue
